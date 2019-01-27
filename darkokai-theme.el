@@ -66,6 +66,11 @@ Also affects 'linum-mode' background."
   :type 'boolean
   :group 'darkokai)
 
+(defcustom darkokai-blue-tint nil
+  "Use a blue-ish tinted background rather than the flatter black."
+  :type 'boolean
+  :group 'darkokai)
+
 (defcustom darkokai-high-contrast-mode-line nil
   "Make the active/inactive mode line stand out more."
   :type 'boolean
@@ -109,6 +114,13 @@ Also affects 'linum-mode' background."
           (darkokai-cyan             "#53f2dc")
           (darkokai-green            "#63de5d")
           (darkokai-gray             "#35393b")
+          ;; Blue tints
+          (darkokai-bg-blue          "#1E1F28")
+          (darkokai-fringe-blue      "#2a2b38")
+          (darkokai-pl-ld            "#38394a")
+          (darkokai-pl-d             "#323342")
+          (darkokai-pl-dd            "#292a36")
+          (darkokai-pl-l             "#424458")
           ;; Darker and lighter accented colors
           (darkokai-yellow-d         "#BEB244")
           (darkokai-yellow-l         "#FFF7A8")
@@ -160,32 +172,58 @@ Also affects 'linum-mode' background."
           (darkokai-green-hc         "#CCF47C")
           (darkokai-green-lc         "#63de5d")
           ;; customize based face properties
+          (s-primary-bg             (if darkokai-blue-tint
+                                        darkokai-bg-blue darkokai-bg))
           (s-variable-pitch         (if darkokai-use-variable-pitch
                                         'variable-pitch 'default))
+          (s-distinct-fringe        (if darkokai-blue-tint
+                                        darkokai-fringe-blue darkokai-gray-dd))
           (s-fringe-bg              (if darkokai-distinct-fringe-background
-                                        darkokai-gray-dd darkokai-bg))
+                                        s-distinct-fringe darkokai-bg))
           (s-mode-line-fg           (if darkokai-high-contrast-mode-line
                                         darkokai-bg darkokai-fg))
           (s-mode-line-bg           (if darkokai-high-contrast-mode-line
-                                        darkokai-fg darkokai-gray))
+                                        darkokai-fg (if darkokai-blue-tint
+                                                        darkokai-pl-d darkokai-gray)))
           (s-mode-line-buffer-id-fg (if darkokai-high-contrast-mode-line
                                         'unspecified darkokai-green-lc))
           (s-mode-line-inactive-fg  (if darkokai-high-contrast-mode-line
                                         darkokai-fg darkokai-comments))
           (s-mode-line-inactive-bg  (if darkokai-high-contrast-mode-line
-                                        darkokai-gray-dd darkokai-bg))
+                                        darkokai-gray-dd (if darkokai-blue-tint
+                                                             darkokai-pl-dd darkokai-bg)))
           (s-mode-line-inactive-bc  (if darkokai-high-contrast-mode-line
                                         darkokai-fg darkokai-gray))
 
-          ;; powerline
-          (s-powerline-active1-bg   (if darkokai-high-contrast-mode-line
-                                        darkokai-gray-l darkokai-gray))
-          (s-powerline-active2-bg   (if darkokai-high-contrast-mode-line
-                                        darkokai-gray darkokai-gray-l))
-          (s-powerline-inactive1-bg (if darkokai-high-contrast-mode-line
-                                        darkokai-gray darkokai-gray-d))
-          (s-powerline-inactive2-bg (if darkokai-high-contrast-mode-line
-                                        darkokai-bg darkokai-gray))
+          ;; powerline default
+          (s-powerline-default-active1-bg   (if darkokai-high-contrast-mode-line
+                                                darkokai-gray-l darkokai-gray))
+          (s-powerline-default-active2-bg   (if darkokai-high-contrast-mode-line
+                                                darkokai-gray darkokai-gray-l))
+          (s-powerline-default-inactive1-bg (if darkokai-high-contrast-mode-line
+                                                darkokai-gray darkokai-gray-d))
+          (s-powerline-default-inactive2-bg (if darkokai-high-contrast-mode-line
+                                                darkokai-bg darkokai-gray))
+
+          ;; powerline blue versions
+          (s-powerline-active1-blue-bg   (if darkokai-high-contrast-mode-line
+                                             darkokai-pl-l darkokai-pl-d))
+          (s-powerline-active2-blue-bg   (if darkokai-high-contrast-mode-line
+                                             darkokai-pl-d darkokai-pl-l))
+          (s-powerline-inactive1-blue-bg (if darkokai-high-contrast-mode-line
+                                             darkokai-pl-d darkokai-pl-d))
+          (s-powerline-inactive2-blue-bg (if darkokai-high-contrast-mode-line
+                                             darkokai-bg darkokai-pl-d))
+
+          ;; powerline conditional
+          (s-powerline-active1-bg   (if darkokai-blue-tint
+                                        s-powerline-active1-blue-bg s-powerline-default-active1-bg))
+          (s-powerline-active2-bg   (if darkokai-blue-tint
+                                        s-powerline-active2-blue-bg s-powerline-default-active2-bg))
+          (s-powerline-inactive1-bg   (if darkokai-blue-tint
+                                          s-powerline-inactive1-blue-bg s-powerline-default-inactive1-bg))
+          (s-powerline-inactive2-bg   (if darkokai-blue-tint
+                                          s-powerline-inactive2-blue-bg s-powerline-default-inactive2-bg))
 
           ;; Definitions for terminals that do not support 256 colors
           (terminal-class                    '((class color) (min-colors 89)))
@@ -359,7 +397,7 @@ Also affects 'linum-mode' background."
 
    `(default
       ((,class (:foreground ,darkokai-fg
-                            :background ,darkokai-bg))
+                            :background ,s-primary-bg))
        (,terminal-class (:foreground ,terminal-darkokai-fg
                                      :background ,terminal-darkokai-bg))))
 
@@ -1865,8 +1903,8 @@ Also affects 'linum-mode' background."
       (,terminal-class (:inherit erc-default-face))))
 
    `(erc-input-face
-     ((,class (:foreground ,darkokai-yellow))
-      (,terminal-class (:foreground ,terminal-darkokai-yellow))))
+     ((,class (:inherit erc-default-face))
+      (,terminal-class (:inherit erc-default-face))))
 
    `(erc-keyword-face
      ((,class (:foreground ,darkokai-blue
@@ -1891,8 +1929,8 @@ Also affects 'linum-mode' background."
       (,terminal-class (:inherit erc-default-face))))
 
    `(erc-notice-face
-     ((,class (:foreground ,darkokai-green))
-      (,terminal-class (:foreground ,terminal-darkokai-green))))
+     ((,class (:inherits erc-default-face))
+      (,terminal-class (:inherits erc-default-face))))
 
    `(erc-pal-face
      ((,class (:foreground ,darkokai-orange
@@ -1901,10 +1939,10 @@ Also affects 'linum-mode' background."
                                     :weight bold))))
 
    `(erc-prompt-face
-     ((,class (:foreground ,darkokai-orange
+     ((,class (:foreground ,darkokai-blue
                            :background ,darkokai-bg
                            :weight bold))
-      (,terminal-class (:foreground ,terminal-darkokai-orange
+      (,terminal-class (:foreground ,terminal-darkokai-blue
                                     :background ,terminal-darkokai-bg
                                     :weight bold))))
 
@@ -4258,38 +4296,32 @@ Also affects 'linum-mode' background."
                                     :foreground ,terminal-darkokai-blue-hc))))
 
    `(org-habit-clear-future-face
-     ((,class (:background ,darkokai-blue-lc))
-      (,terminal-class (:background ,terminal-darkokai-blue-lc))))
+     ((,class (:background ,darkokai-blue-l))
+      (,terminal-class (:background ,terminal-darkokai-blue-l))))
 
    `(org-habit-ready-face
-     ((,class (:background ,darkokai-green-lc
-                           :foreground ,darkokai-green))
-      (,terminal-class (:background ,terminal-darkokai-green-lc
-                                    :foreground ,terminal-darkokai-green))))
+     ((,class (:background ,darkokai-green-plain))
+      (,terminal-class (:background ,terminal-darkokai-green))))
 
    `(org-habit-ready-future-face
      ((,class (:background ,darkokai-green-lc))
       (,terminal-class (:background ,terminal-darkokai-green-lc))))
 
    `(org-habit-alert-face
-     ((,class (:background ,darkokai-yellow
-                           :foreground ,darkokai-yellow-lc))
-      (,terminal-class (:background ,terminal-darkokai-yellow
-                                    :foreground ,terminal-darkokai-yellow-lc))))
+     ((,class (:background ,darkokai-yellow))
+      (,terminal-class (:background ,terminal-darkokai-yellow))))
 
    `(org-habit-alert-future-face
      ((,class (:background ,darkokai-yellow-lc))
       (,terminal-class (:background ,terminal-darkokai-yellow-lc))))
 
    `(org-habit-overdue-face
-     ((,class (:background ,darkokai-red
-                           :foreground ,darkokai-red-lc))
-      (,terminal-class (:background ,terminal-darkokai-red
-                                    :foreground ,terminal-darkokai-red-lc))))
+     ((,class (:background ,darkokai-red-plain))
+      (,terminal-class (:background ,terminal-darkokai-red))))
 
    `(org-habit-overdue-future-face
-     ((,class (:background ,darkokai-red-lc))
-      (,terminal-class (:background ,terminal-darkokai-red-lc))))
+     ((,class (:background ,darkokai-red-hc))
+      (,terminal-class (:background ,terminal-darkokai-red-hc))))
 
    ;; latest additions
    `(org-agenda-dimmed-todo-face
