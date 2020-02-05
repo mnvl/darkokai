@@ -115,8 +115,8 @@ Also affects 'linum-mode' background."
           (darkokai-green            "#63de5d")
           (darkokai-gray             "#35393b")
           ;; Blue tints
-          (darkokai-bg-blue          "#1E1F28")
-          (darkokai-fringe-blue      "#2a2b38")
+          (darkokai-bg-blue          "#282a36")
+          (darkokai-fringe-blue      "#323342")
           (darkokai-pl-ld            "#38394a")
           (darkokai-pl-d             "#323342")
           (darkokai-pl-dd            "#292a36")
@@ -147,7 +147,7 @@ Also affects 'linum-mode' background."
           ;; Adaptive colors
           (darkokai-fg               "#f8fbfc")
           (darkokai-bg               "#000000")
-          (darkokai-highlight-line   "#424748")
+          (darkokai-highlight-line   "#323342")
           (darkokai-highlight        "#5D6365")
           (darkokai-emph             "#ffffff")
           (darkokai-comments         "#6A6D70")
@@ -2979,6 +2979,49 @@ Also affects 'linum-mode' background."
      ((,class (:foreground ,darkokai-cyan))
       (,terminal-class (:foreground ,terminal-darkokai-cyan))))
 
+   ;; ivy
+   `(ivy-subdir
+     ((,class (:foreground ,darkokai-blue))
+      (,terminal-class (:foreground ,terminal-darkokai-blue))))
+
+   `(ivy-minibuffer-match-face-1
+     ((,class (:foreground ,darkokai-comments
+                           :underline nil))
+      (,terminal-class (:foreground ,terminal-darkokai-comments
+                                    :underline nil))))
+
+   `(ivy-minibuffer-match-face-2
+     ((,class (:foreground ,darkokai-violet-l
+                           :underline t))
+      (,terminal-class (:foreground ,terminal-darkokai-violet-l
+                                    :underline t))))
+
+   `(ivy-minibuffer-match-face-3
+     ((,class (:foreground ,darkokai-magenta-l
+                           :underline t))
+      (,terminal-class (:foreground ,terminal-darkokai-magenta-l
+                                    :underline t))))
+
+   `(ivy-minibuffer-match-face-4
+     ((,class (:foreground ,darkokai-cyan-l
+                           :underline t))
+      (,terminal-class (:foreground ,terminal-darkokai-cyan-l
+                                    :underline t))))
+
+   `(ivy-match-required-face
+     ((,class (:foreground ,darkokai-red-plain))
+      (,terminal-class (:foreground ,darkokai-red-plain))))
+
+   `(ivy-current-match
+     ((,class (:background ,darkokai-cyan-d
+                           :foreground ,darkokai-cyan-l
+                           :weight bold))
+      (,terminal-class (:background ,terminal-darkokai-cyan-d
+                                    :foreground ,terminal-darkokai-cyan-l
+                                    :weight bold))))
+
+   ;; jabber
+
    `(jabber-activity-face
      ((,class (:weight bold
                        :foreground ,darkokai-red))
@@ -3197,6 +3240,10 @@ Also affects 'linum-mode' background."
                            :background ,darkokai-highlight-line))
       (,terminal-class (:foreground ,terminal-darkokai-red
                                     :background ,terminal-darkokai-highlight-line))))
+
+   `(magit-section-highlight
+     ((,class (:background ,darkokai-highlight-line))
+      (,terminal-class (:background ,terminal-darkokai-highlight-line))))
 
    `(magit-section-title
      ((,class (:foreground ,darkokai-yellow
